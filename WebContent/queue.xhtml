@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+>
+	
+<h:head/>
+<h1>Job #{process.jobId}</h1>
+
+<c:set var="position" value="#{process.jobPosition}" />
+
+<c:choose id="njobs">
+	<c:when test="${position == 0}">
+		<h:form>
+			<h:outputLabel value="Your job is running. This page will refresh when the execution is finished" />
+			<p:poll process="@this" interval="3" listener="#{process.checkRunStatus}" />
+		</h:form>
+	</c:when>
+	<c:otherwise>
+		<h:form>
+			<h:outputLabel value="Your job is queued. There are " />
+			<h:outputText id="njobs" value="#{process.jobPosition}" />
+			<h:outputLabel value=" jobs in the front." />
+   			<p:poll process="@this" interval="3" listener="#{process.calcJobPosition}" update="njobs"/>
+		</h:form>
+	</c:otherwise>
+</c:choose>
+
+</html>
